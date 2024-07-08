@@ -1,12 +1,7 @@
-repository = "termapps/cli-clap"
-
-exclude = ["aur"]
-
-[aur_bin]
-name = "cli-clap"
+repository = "open-data-schema/ods"
 
 [homebrew]
-repository = "termapps/homebrew-tap"
+repository = "open-data-schema/ods"
 
 [scoop]
-repository = "termapps/scoop-bucket"
+repository = "open-data-schema/ods"

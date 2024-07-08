@@ -10,11 +10,11 @@ use tracing_subscriber::prelude::*;
 mod error;
 mod styles;
 
-mod hello;
+mod generate;
 
-/// A simple CLI application using clap
+/// CLI for Open Data Schema
 #[derive(Debug, Parser)]
-#[clap(name = "cli-clap", version)]
+#[clap(name = "ods", version)]
 #[command(styles = styles::styles())]
 struct App {
     #[command(subcommand)]
@@ -29,7 +29,8 @@ struct App {
 
 #[derive(Debug, Parser)]
 enum Subcommands {
-    Hello(hello::Hello),
+    #[clap(aliases = &["gen", "g"])]
+    Generate(generate::Generate),
 }
 
 fn main() {
@@ -48,7 +49,7 @@ fn main() {
         .init();
 
     let result = match program.cmd {
-        Subcommands::Hello(x) => x.run(),
+        Subcommands::Generate(x) => x.run(),
     };
 
     error::finish(result);
