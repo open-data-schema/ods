@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "description": "CLI for Open Data Schema",
+  "homepage": "https://github.com/open-data-schema/ods",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/open-data-schema/ods/releases/download/v0.0.1/ods-v0.0.1-x86_64-pc-windows-msvc.zip",
+      "hash": "5c73de95985ae645e7a5182c6321a2813f9c3d3ca42d82f4b0cbe2cf5af2ffe2"
+    },
+    "32bit": {
+      "url": "https://github.com/open-data-schema/ods/releases/download/v0.0.1/ods-v0.0.1-i686-pc-windows-msvc.zip",
+      "hash": "71eeb1f427d09fdd8c9dd019633b1f53370cc194ed102890958499125b3d9927"
+    }
+  },
+  "bin": ["ods.exe"]
+}
