@@ -18,37 +18,37 @@ CLI for Open Data Schema
 #### With [Homebrew](https://brew.sh)
 
 ```
-$ brew tap open-data-schema/ods https://github.com/open-data-schema/ods
-$ brew install open-data-schema/ods/ods
+brew tap open-data-schema/ods https://github.com/open-data-schema/ods
+brew install open-data-schema/ods/ods
 ```
 
 <!-- omit from toc -->
 #### With [AUR](https://aur.archlinux.org)
 
 ```
-$ yay -S ods
+yay -S ods
 ```
 
 <!-- omit from toc -->
 #### With [AUR (binary)](https://aur.archlinux.org)
 
 ```
-$ yay -S ods-bin
+yay -S ods-bin
 ```
 
 <!-- omit from toc -->
 #### With [Scoop](https://scoop.sh)
 
 ```
-$ scoop bucket add open-data-schema https://github.com/open-data-schema/ods
-$ scoop install ods
+scoop bucket add open-data-schema https://github.com/open-data-schema/ods
+scoop install ods
 ```
 
 <!-- omit from toc -->
-#### With [cargo](https://crates.io/)
+#### With [cargo](https://crates.io)
 
 ```
-$ cargo install ods
+cargo install ods
 ```
 
 <!-- omit from toc -->
