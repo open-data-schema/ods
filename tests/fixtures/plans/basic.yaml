@@ -1,0 +1,13 @@
+events:
+  user login started:
+    description: User clicks on login button
+    properties:
+      provider:
+        enum:
+          - email
+          - google
+          - github
+    required:
+      - provider
+  user logged out:
+    description: User logs out of the application

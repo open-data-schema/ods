@@ -10,7 +10,10 @@ use tracing_subscriber::prelude::*;
 mod error;
 mod styles;
 
+mod schema;
+
 mod generate;
+mod lint;
 
 /// CLI for Open Data Schema
 #[derive(Debug, Parser)]
@@ -31,6 +34,7 @@ struct App {
 enum Subcommands {
     #[clap(aliases = &["gen", "g"])]
     Generate(generate::Generate),
+    Lint(lint::Lint),
 }
 
 fn main() {
@@ -50,6 +54,7 @@ fn main() {
 
     let result = match program.cmd {
         Subcommands::Generate(x) => x.run(),
+        Subcommands::Lint(x) => x.run(),
     };
 
     error::finish(result);

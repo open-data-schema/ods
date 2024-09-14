@@ -9,6 +9,14 @@ use proc_exit::Code;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    #[error("unable to figure out where to write the output")]
+    NoOutputDestination,
+    #[error("unable to recognize file format")]
+    BadFileFormat,
+    #[error("{0}")]
+    SerdeJson(#[from] serde_json::Error),
+    #[error("{0}")]
+    SerdeYaml(#[from] serde_yml::Error),
     #[error("{0}")]
     Io(#[from] IoError),
 }
