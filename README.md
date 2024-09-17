@@ -45,6 +45,13 @@ scoop install ods
 ```
 
 <!-- omit from toc -->
+#### With [Nix](https://nixos.org)
+
+```
+nix profile install github:open-data-schema/ods
+```
+
+<!-- omit from toc -->
 #### With [cargo](https://crates.io)
 
 ```
