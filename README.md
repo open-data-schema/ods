@@ -15,6 +15,13 @@ CLI for Open Data Schema
 `ods` is available on Linux, macOS & Windows
 
 <!-- omit from toc -->
+#### With [Cargo](https://crates.io)
+
+```
+cargo install ods
+```
+
+<!-- omit from toc -->
 #### With [Homebrew](https://brew.sh)
 
 ```
@@ -49,13 +56,6 @@ scoop install ods
 
 ```
 nix profile install github:open-data-schema/ods
-```
-
-<!-- omit from toc -->
-#### With [cargo](https://crates.io)
-
-```
-cargo install ods
 ```
 
 <!-- omit from toc -->
