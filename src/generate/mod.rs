@@ -8,10 +8,7 @@ use crate::{
     schema::SchemaOpt,
 };
 
-#[cfg(test)]
-mod tests;
-
-/// Generate code
+/// Generate code from plan
 #[derive(Debug, Parser)]
 pub struct Generate {
     #[clap(flatten)]
@@ -24,12 +21,12 @@ pub struct Generate {
 impl Generate {
     #[instrument(name = "gen", skip_all)]
     pub fn run(self) -> Result {
-        let (files, metadata) = self.schema.load()?;
+        let files = self.schema.load()?;
 
         let output = match self.output {
             Some(output) => output,
             // If the plan is a file, write the output to the parent folder
-            None if metadata.is_file() => self
+            None if self.schema.plan.is_file() => self
                 .schema
                 .plan
                 .parent()
@@ -40,7 +37,7 @@ impl Generate {
 
         create_dir_all(&output)?;
 
-        for (name, spec) in files {}
+        for (_name, _spec) in files {}
 
         Ok(())
     }

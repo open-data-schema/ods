@@ -2,16 +2,27 @@ use std::{collections::HashMap, fs::read_to_string, path::PathBuf};
 
 use serde::Deserialize;
 
-use crate::error::{Error, Result};
+use crate::{
+    error::{Error, Result},
+    lint::rules::RulesConfig,
+};
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Source {
+    pub description: Option<String>,
+}
 
 #[derive(Debug, Deserialize)]
-struct Event {
-    description: Option<String>,
+pub struct Event {
+    pub description: Option<String>,
+    pub sources: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Spec {
-    events: HashMap<String, Event>,
+    pub data: HashMap<String, Event>,
+    pub sources: Option<HashMap<String, Source>>,
+    pub lint: Option<RulesConfig>,
 }
 
 impl Spec {

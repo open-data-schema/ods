@@ -1,0 +1,7 @@
+sources:
+  ios:
+    description: iOS application
+data:
+  user logged out:
+    sources: [api, ios]
+    description: User logs out of the application

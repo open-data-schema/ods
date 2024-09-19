@@ -41,6 +41,10 @@ pub fn finish(result: Result) {
         Code::SUCCESS
     };
 
+    exit(code);
+}
+
+pub fn exit(code: Code) {
     stdout().flush().unwrap();
     stderr().flush().unwrap();
 
