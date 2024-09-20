@@ -1,5 +1,5 @@
 lint:
   needs_description:
     level: error
-data:
+metrics:
   user logged in:

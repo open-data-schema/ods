@@ -34,7 +34,7 @@ macro_rules! rules {
         }
 
         impl RulesConfig {
-            pub(super) fn run_rule(&self, rule: &Rules, spec: &Spec) -> Result<(LintLevel, Vec<(String, LintResult)>)> {
+            pub(super) fn run_rule(&self, rule: &Rules, spec: &Spec) -> Result<(LintLevel, LintItem, Vec<(String, LintResult)>)> {
                 match rule {
                     $(Rules::$rule => {
                         let config = self
@@ -42,15 +42,17 @@ macro_rules! rules {
                             .as_ref()
                             .cloned()
                             .unwrap_or_default();
+
                         let level = config.level.unwrap_or_else(|| config.config.level());
+                        let ty = config.config.ty();
 
                         if level == LintLevel::Off {
-                            return Ok((level, vec![]));
+                            return Ok((level, ty, vec![]));
                         }
 
                         let results = config.config.run(spec)?;
 
-                        return Ok((level, results));
+                        return Ok((level, ty, results));
                     })+
                 }
             }

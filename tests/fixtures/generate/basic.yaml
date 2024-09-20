@@ -1,4 +1,4 @@
-data:
+metrics:
   user login started:
     description: User clicks on login button
     properties:

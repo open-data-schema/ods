@@ -1,4 +1,4 @@
-data:
+metrics:
   user logged in:
   user logged out:
     description: User logs out of the application

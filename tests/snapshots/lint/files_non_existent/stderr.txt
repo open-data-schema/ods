@@ -1,0 +1,1 @@
+[1m[31merror[39m[0m: unable to find tests/fixtures/lint/non_existent.yaml

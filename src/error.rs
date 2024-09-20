@@ -1,5 +1,6 @@
 use std::{
     io::{Error as IoError, Write},
+    path::PathBuf,
     result::Result as StdResult,
 };
 
@@ -11,8 +12,12 @@ use proc_exit::Code;
 pub enum Error {
     #[error("unable to figure out where to write the output")]
     NoOutputDestination,
+    #[error("plan does not contain {0}")]
+    FileOutsidePlan(PathBuf),
     #[error("unable to recognize file format")]
     BadFileFormat,
+    #[error("unable to find {0}")]
+    BadPath(PathBuf),
     #[error("{0}")]
     SerdeJson(#[from] serde_json::Error),
     #[error("{0}")]

@@ -1,28 +1,52 @@
+use std::{
+    fmt::{Display as FmtDisplay, Formatter, Result as FmtResult},
+    path::{absolute, PathBuf},
+};
+
 use anstream::println;
 use clap::Parser;
 use owo_colors::OwoColorize;
 use proc_exit::Code;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use serde_json::to_string;
 use tracing::{debug, instrument, trace};
 
 use crate::{
-    error::{exit, Result},
+    error::{exit, Error, Result},
     lint::rules::Rules,
     schema::SchemaOpt,
 };
 
 pub mod rules;
 
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "snake_case")]
 enum LintLevel {
-    #[serde(rename = "off")]
     Off,
 
     #[serde(rename = "warn")]
     Warning,
 
-    #[serde(rename = "error")]
     Error,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+enum LintItem {
+    Metric,
+    Source,
+}
+
+impl FmtDisplay for LintItem {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(
+            f,
+            "{}",
+            to_string(self)
+                .expect("Failed to serialize LintItem")
+                .trim_matches('"')
+        )
+    }
 }
 
 #[derive(Debug)]
@@ -35,6 +59,9 @@ struct LintResult {
 pub struct Lint {
     #[clap(flatten)]
     schema: SchemaOpt,
+
+    /// File paths in the plan folder to lint (defaults to all)
+    files: Vec<PathBuf>,
 
     /// Exit with a zero code even on lint errors
     #[clap(long)]
@@ -49,30 +76,67 @@ impl Lint {
 
         let files = self.schema.load()?;
 
-        for (name, spec) in files {
-            debug!("Linting spec: {}", name);
+        let plan_path = absolute(&self.schema.plan)?;
+
+        let selected = if self.files.is_empty() {
+            files
+        } else {
+            let selected_files = self
+                .files
+                .into_iter()
+                .map(|file| {
+                    let file_path = absolute(&file)?;
+
+                    if !file.exists() {
+                        return Err(Error::BadPath(file));
+                    }
+
+                    let relative_file_path = file_path
+                        .strip_prefix(&plan_path)
+                        .map_err(|_| Error::FileOutsidePlan(file.clone()))?
+                        .to_string_lossy()
+                        .to_string();
+
+                    if !files.contains_key(&relative_file_path) {
+                        return Err(Error::BadPath(file));
+                    }
+
+                    Ok(relative_file_path)
+                })
+                .collect::<Result<Vec<_>>>()?;
+
+            files
+                .into_iter()
+                .filter(|(k, _)| selected_files.contains(k))
+                .collect()
+        };
+
+        for (name, spec) in selected {
+            debug!("Linting file: {}", name);
             let spec_results = Rules::run(&spec)?;
 
             if spec_results.is_empty() {
-                trace!("No issues found in spec: {}", name);
+                trace!("No issues found in file: {}", name);
                 continue;
             }
 
             println!("\n{}", name.magenta());
 
-            for (data_name, results) in spec_results {
-                println!("  {}", data_name.cyan());
+            for (ty, ty_results) in spec_results {
+                for (name, results) in ty_results {
+                    println!("  {} {}", name.blue(), format!("({ty})").cyan());
 
-                for (level, result) in results {
-                    match level {
-                        LintLevel::Off => {}
-                        LintLevel::Warning => {
-                            warnings += 1;
-                            println!("    {} {}", " warn".yellow(), result.message);
-                        }
-                        LintLevel::Error => {
-                            errors += 1;
-                            println!("    {} {}", "error".red(), result.message);
+                    for (level, result) in results {
+                        match level {
+                            LintLevel::Off => {}
+                            LintLevel::Warning => {
+                                warnings += 1;
+                                println!("    {} {}", " warn".yellow(), result.message);
+                            }
+                            LintLevel::Error => {
+                                errors += 1;
+                                println!("    {} {}", "error".red(), result.message);
+                            }
                         }
                     }
                 }

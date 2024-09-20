@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 use crate::{
     error::Result,
-    lint::{rules::Rule, LintLevel, LintResult},
+    lint::{rules::Rule, LintResult},
     schema::spec::Spec,
 };
 
@@ -10,14 +10,10 @@ use crate::{
 pub struct Config {}
 
 impl Rule for Config {
-    fn level(&self) -> LintLevel {
-        LintLevel::Warning
-    }
-
     fn run(&self, spec: &Spec) -> Result<Vec<(String, LintResult)>> {
         let mut results = vec![];
 
-        for (name, event) in &spec.data {
+        for (name, event) in &spec.metrics {
             if event.description.is_none() {
                 results.push((
                     name.clone(),

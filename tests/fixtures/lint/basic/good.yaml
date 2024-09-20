@@ -1,0 +1,3 @@
+metrics:
+  todo created:
+    description: User creates a todo item
