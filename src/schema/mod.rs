@@ -1,13 +1,11 @@
 use std::path::{absolute, PathBuf};
 
 use clap::Parser;
+use eyre::eyre;
 use indexmap::IndexMap;
 use tracing::{debug, instrument, trace};
 
-use crate::{
-    error::{Error, Result},
-    schema::spec::Spec,
-};
+use crate::{error::Result, schema::spec::Spec};
 
 pub mod spec;
 
@@ -33,7 +31,7 @@ impl SchemaOpt {
             trace!("Loading plan from folder");
             load_dir(&mut files, &self.plan, &base_path)?;
         } else {
-            return Err(Error::BadPath(self.plan.clone()));
+            return Err(eyre!("unable to find {}", self.plan.display()));
         }
 
         debug!("Loaded {} files", files.len());

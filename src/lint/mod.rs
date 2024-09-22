@@ -5,6 +5,7 @@ use std::{
 
 use anstream::println;
 use clap::Parser;
+use eyre::eyre;
 use owo_colors::OwoColorize;
 use proc_exit::Code;
 use serde::{Deserialize, Serialize};
@@ -12,7 +13,7 @@ use serde_json::to_string;
 use tracing::{debug, instrument, trace};
 
 use crate::{
-    error::{exit, Error, Result},
+    error::{exit, Result},
     lint::rules::Rules,
     schema::SchemaOpt,
 };
@@ -88,17 +89,17 @@ impl Lint {
                     let file_path = absolute(&file)?;
 
                     if !file.exists() {
-                        return Err(Error::BadPath(file));
+                        return Err(eyre!("unable to find {}", file.display()));
                     }
 
                     let relative_file_path = file_path
                         .strip_prefix(&plan_path)
-                        .map_err(|_| Error::FileOutsidePlan(file.clone()))?
+                        .map_err(|_| eyre!("plan does not contain {}", file.display()))?
                         .to_string_lossy()
                         .to_string();
 
                     if !files.contains_key(&relative_file_path) {
-                        return Err(Error::BadPath(file));
+                        return Err(eyre!("unable to find {}", file.display()));
                     }
 
                     Ok(relative_file_path)

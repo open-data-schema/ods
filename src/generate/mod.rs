@@ -1,12 +1,10 @@
 use std::{fs::create_dir_all, path::PathBuf};
 
 use clap::Parser;
+use eyre::eyre;
 use tracing::instrument;
 
-use crate::{
-    error::{Error, Result},
-    schema::SchemaOpt,
-};
+use crate::{error::Result, schema::SchemaOpt};
 
 /// Generate code from plan
 #[derive(Debug, Parser)]
@@ -30,7 +28,7 @@ impl Generate {
                 .schema
                 .plan
                 .parent()
-                .ok_or(Error::NoOutputDestination)?
+                .ok_or(eyre!("unable to figure out where to write the output"))?
                 .join("ods"),
             None => self.schema.plan.join("ods"),
         };
